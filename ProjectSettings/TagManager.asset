@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Demo
+  - Floor
+  - Boundaries
+  - Arena
   layers:
   - Default
   - TransparentFX

@@ -18,17 +18,8 @@ public class MainMenuController : MonoBehaviour
     private GameObject mainObject;
     private int indicator;
     private static Dictionary<PrimitiveType, Mesh> primitiveMeshes = new Dictionary<PrimitiveType, Mesh>();
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public GameObject nextMenu;
 
     public void CreateObject()
     {
@@ -135,15 +126,22 @@ public class MainMenuController : MonoBehaviour
     {
         if (mainObject != null)
         {
-            if (mainObject.GetComponent<SolverHandler>() == null)
-                mainObject.AddComponent(typeof(SolverHandler));
-            if (mainObject.GetComponent<FollowMeToggle>() == null)
-                mainObject.AddComponent(typeof(FollowMeToggle));
-            mainObject.GetComponent<FollowMeToggle>().AutoFollowAtDistance = true;
-            mainObject.GetComponent<FollowMeToggle>().AutoFollowDistance = 0f;
-            mainObject.GetComponent<RadialView>().MinDistance = 0.15f;
-            mainObject.GetComponent<RadialView>().MaxDistance = 0.6f;
-
+            if (mainObject.GetComponent<RadialView>() == null)
+            {
+                if (mainObject.GetComponent<SolverHandler>() == null)
+                    mainObject.AddComponent(typeof(SolverHandler));
+                if (mainObject.GetComponent<FollowMeToggle>() == null)
+                    mainObject.AddComponent(typeof(FollowMeToggle));
+                mainObject.GetComponent<FollowMeToggle>().AutoFollowAtDistance = true;
+                mainObject.GetComponent<FollowMeToggle>().AutoFollowDistance = 0.4f;
+                mainObject.GetComponent<RadialView>().MinDistance = 0.3f;
+                mainObject.GetComponent<RadialView>().MaxDistance = 1f;
+            }
+            else
+            {
+                Destroy(mainObject.GetComponent<FollowMeToggle>());
+                Destroy(mainObject.GetComponent<RadialView>());
+            }
         }
     }
 
@@ -177,6 +175,14 @@ public class MainMenuController : MonoBehaviour
         }
     
             
+    }
+
+
+    public void StartArena()
+    {
+        ResetScene();
+        nextMenu.gameObject.SetActive(!nextMenu.gameObject.activeSelf);
+        this.gameObject.SetActive(false);
     }
 
     public void FollowMeMenu()
