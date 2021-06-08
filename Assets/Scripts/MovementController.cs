@@ -5,17 +5,16 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
 
-    public float speed;
+    private float speed;
     private float latestDirectionChangeTime;
     private readonly float directionChangeTime = 4f;
     private Vector3 movementDirection;
     private Vector3 movementPerSecond;
-    public float headspeed;
     // Start is called before the first frame update
     void Start()
     {
         latestDirectionChangeTime = 0f;
-        speed = 0.05f;
+        speed = 0.15f;
         CalculateNewMovementVector();
     }
 
@@ -32,7 +31,6 @@ public class MovementController : MonoBehaviour
         this.transform.Find("Body").transform.Rotate(new Vector3(movementDirection.x , 0, movementDirection.z));
         if (this.transform.Find("Head").transform.rotation.z != this.transform.Find("Body").transform.rotation.z)
             this.transform.Find("Head").transform.Rotate(new Vector3(-0, 0, movementDirection.z));
-        //this.transform.Find("Head").transform.Rotate(new Vector3(0, movementDirection.y * Time.deltaTime, 0));
     }
 
     private void CalculateNewMovementVector()
