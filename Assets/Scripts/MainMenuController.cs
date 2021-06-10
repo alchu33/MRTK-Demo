@@ -11,6 +11,10 @@ using UnityEngine.SocialPlatforms;
 
 public class MainMenuController : MonoBehaviour
 {
+    public Material[] boundingMats;
+    public GameObject handlePrefab;
+    public GameObject rotatePrefab;
+
     private Vector3 position = new Vector3(0, 0, 0.8f);
     private Vector3 size = new Vector3(0.2f, 0.2f, 0.2f);
     public Vector3 prefabSize = new Vector3(0.03f, 0.03f, 0.03f);
@@ -21,6 +25,7 @@ public class MainMenuController : MonoBehaviour
 
     public GameObject nextMenu;
 
+    //Method that allows the creation of a Cube from the list of primitive objects
     public void CreateObject()
     {
         ResetScene();
@@ -34,18 +39,19 @@ public class MainMenuController : MonoBehaviour
             indicator = 3;
             mainObject = newObject;
         }
-
     }
 
+    //Method that takes all 'Demo' Objects and adds the capacity to move them with your hand
     public void AddMovement()
     {
-        foreach (GameObject item in GameObject.FindGameObjectsWithTag(tag))
+                foreach (GameObject item in GameObject.FindGameObjectsWithTag(tag))
         {
             if (item.GetComponent<ObjectManipulator>() == null)
                 item.AddComponent(typeof(ObjectManipulator));
         }
     }
 
+    //Method that takes all 'Demo' Objects and adds the capacity to rotate and scale using your hand
     public void AddBounds()
     {
         foreach (GameObject item in GameObject.FindGameObjectsWithTag(tag))
@@ -54,6 +60,15 @@ public class MainMenuController : MonoBehaviour
             {
                 item.AddComponent(typeof(BoundsControl));
                 item.GetComponent<BoundsControl>().BoundsOverride = item.GetComponent<BoxCollider>();
+                item.GetComponent<BoundsControl>().BoxDisplayConfig.BoxMaterial = boundingMats[0];
+                item.GetComponent<BoundsControl>().BoxDisplayConfig.BoxGrabbedMaterial = boundingMats[1];
+                item.GetComponent<BoundsControl>().ScaleHandlesConfig.HandleMaterial = boundingMats[2];
+                item.GetComponent<BoundsControl>().ScaleHandlesConfig.HandleMaterial = boundingMats[3];
+                item.GetComponent<BoundsControl>().ScaleHandlesConfig.HandlePrefab = handlePrefab;
+                item.GetComponent<BoundsControl>().RotationHandlesConfig.HandlePrefab = rotatePrefab;
+                item.GetComponent<BoundsControl>().RotationHandlesConfig.HandleSize = 0.0025f;
+                item.GetComponent<BoundsControl>().RotationHandlesConfig.HandleMaterial = boundingMats[2];
+                item.GetComponent<BoundsControl>().RotationHandlesConfig.HandleGrabbedMaterial = boundingMats[3];
                 if (indicator == 1 || indicator == 2)
                     item.GetComponent<BoxCollider>().size = new Vector3(1, 2, 1);
                 else if (indicator == 0 || indicator == 3)
@@ -63,6 +78,7 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    //Method that changes the shape of the object created using the create button
     public void ChangeShape()
     {
         if (mainObject != null)
@@ -101,6 +117,7 @@ public class MainMenuController : MonoBehaviour
 
     }
 
+    //Method that deletes all 'Demo' objects from the hierarchy
     public void ResetScene()
     {
         position = new Vector3(0, 0, 0.8f);
@@ -111,6 +128,7 @@ public class MainMenuController : MonoBehaviour
         mainObject = null;
     }
 
+    //Method that takes all 'Demo' Objects and changes their colour using the materials from the resources folder
     public void ChangeColour()
     {
         Material[] mats = Resources.LoadAll<Material>("Colours");
@@ -122,6 +140,7 @@ public class MainMenuController : MonoBehaviour
 
     }
 
+    //Method that takes the object created with the Create button and gives it the ability to follow you
     public void FollowMeObject()
     {
         if (mainObject != null)
@@ -145,6 +164,7 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    //Method that creates one object from each of four primitives. It creates all four as 'Demo' Objects
     public void PopulateScene()
     {
         if (mainObject != null)
@@ -177,7 +197,7 @@ public class MainMenuController : MonoBehaviour
             
     }
 
-
+    //Method that activates the Arena menu
     public void StartArena()
     {
         ResetScene();
@@ -185,12 +205,13 @@ public class MainMenuController : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
+    //Method that gives the menu the capacity to follow me
     public void FollowMeMenu()
     {
         this.GetComponent<RadialView>().enabled = !this.GetComponent<RadialView>().enabled;
     }
 
-
+    //Auxiliary method that gets you the mesh belonging to one of the primitive objects
     private Mesh GetPrimitiveMesh(PrimitiveType type)
     {
         if (!primitiveMeshes.ContainsKey(type))
@@ -201,6 +222,7 @@ public class MainMenuController : MonoBehaviour
         return primitiveMeshes[type];
     }
 
+    //Method that adds the mesh of a primitive object to the array used in the GetPrimitiveMesh method
     private Mesh CreatePrimitiveMesh(PrimitiveType type)
     {
         GameObject gameObject = GameObject.CreatePrimitive(type);
@@ -211,6 +233,8 @@ public class MainMenuController : MonoBehaviour
         return mesh;
     }
 
+
+    //Actually not even used anymore. Should get rid of it at some point...
     public IEnumerable AddBoundsController()
     {
         Destroy(mainObject.GetComponent<BoundsControl>());
